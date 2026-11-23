@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-push-icr
+spec:
+  params:
+    - name: image
+      type: string
+      description: Local registry image name, e.g. localhost:5000/tax-calculator
+    - name: tag
+      type: string
+      default: latest
+  workspaces:
+    - name: source
+  steps:
+    - name: build-and-push
+      image: gcr.io/kaniko-project/executor:v1.22.0
+      workingDir: $(workspaces.source.path)/source
+      args:
+        - --dockerfile=Dockerfile
+        - --context=.
+        - --destination=$(params.image):$(params.tag)
+        - --insecure
+        - --insecure-pull
