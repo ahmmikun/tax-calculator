@@ -13,9 +13,9 @@ Open http://localhost:3000 and try `/tax?income=1000`.
 
 ## Build and run in Docker
 
-    docker build -t tax-calculator:1.0 .
-    docker run -d --name tax-calculator -p 3000:3000 tax-calculator:1.0
-    curl http://localhost:3000/health
+    docker build -t tax-calculator:latest .
+    docker run -d --name tax-calculator -p 8080:80 tax-calculator:latest
+    curl -I http://localhost:8080/
 
 ## Push to IBM Cloud Container Registry
 
