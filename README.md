@@ -50,8 +50,11 @@ See `tekton/icr-secret.txt` for registry credentials, then:
 
 ## Submission answers
 
-`final-project-answers.txt` contains all answers in text form. Individual text
-answers and output templates are in `evidence/01-*.txt` through `evidence/10-*.txt`,
-plus `evidence/part-a-plan.txt`, `evidence/github-urls.txt` and
-`evidence/submission-checklist.txt`. Replace placeholders with your real values
-and include the 10 screenshots described there.
+All answer files, text outputs and the screenshot were moved OUTSIDE this
+repository to the sibling folder:
+
+    ../project-3 answers/
+
+That folder contains `final-project-answers.txt`, the numbered answer/output
+files (`01-*` through `10-*`), `10-final-output.png`, and the `evidence/`
+subfolder. Replace placeholders with your real values before submitting.
