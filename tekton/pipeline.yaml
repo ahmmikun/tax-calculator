@@ -12,14 +12,14 @@ spec:
       default: main
     - name: image
       type: string
-      description: Full ICR image name, e.g. us.icr.io/<CR_NAMESPACE>/tax-calculator
+      description: Full ICR image name, e.g. us.icr.io/<namespace>/tax-calculator
     - name: tag
       type: string
       default: latest
   workspaces:
     - name: shared-workspace
   tasks:
-    - name: fetch-source
+    - name: clone
       taskRef:
         name: git-clone-tax
       params:
@@ -30,15 +30,22 @@ spec:
       workspaces:
         - name: output
           workspace: shared-workspace
-    - name: unit-tests
-      runAfter: [fetch-source]
+    - name: npminstall
+      runAfter: [clone]
       taskRef:
-        name: jasmine-test
+        name: npm-install
       workspaces:
         - name: source
           workspace: shared-workspace
-    - name: build-and-push
-      runAfter: [unit-tests]
+    - name: tests
+      runAfter: [npminstall]
+      taskRef:
+        name: jasmine-tests
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: build
+      runAfter: [tests]
       taskRef:
         name: build-push-icr
       params:
@@ -50,7 +57,7 @@ spec:
         - name: source
           workspace: shared-workspace
     - name: deploy
-      runAfter: [build-and-push]
+      runAfter: [build]
       taskRef:
         name: deploy-kubectl
       params:

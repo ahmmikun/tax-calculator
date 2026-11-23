@@ -7,11 +7,11 @@ spec:
     name: tax-calculator-pipeline
   params:
     - name: repo-url
-      value: https://github.com/<GITHUB_USER>/<GITHUB_REPO>.git
+      value: https://github.com/ahmmikun/tax-calculator.git
     - name: revision
       value: main
     - name: image
-      value: <REGION>.icr.io/<CR_NAMESPACE>/tax-calculator
+      value: us.icr.io/tax-namespace/tax-calculator
     - name: tag
       value: latest
   workspaces:
