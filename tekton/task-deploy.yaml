@@ -1,0 +1,31 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: deploy-kubectl
+spec:
+  params:
+    - name: image
+      type: string
+    - name: tag
+      type: string
+      default: latest
+    - name: manifest
+      type: string
+      default: k8s/deployment.yaml
+  workspaces:
+    - name: source
+  steps:
+    - name: deploy
+      image: bitnami/kubectl:1.29
+      workingDir: $(workspaces.source.path)/source
+      script: |
+        #!/bin/sh
+        set -e
+        FULL_IMAGE="$(params.image):$(params.tag)"
+        sed "s|image: .*|image: $FULL_IMAGE|" \
+          $(params.manifest) | kubectl apply -f -
+        kubectl set image deployment/tax-calculator \
+          tax-calculator=$FULL_IMAGE
+        kubectl rollout status deployment/tax-calculator --timeout=180s
+        kubectl get pods -l app=tax-calculator
+        kubectl get svc tax-calculator

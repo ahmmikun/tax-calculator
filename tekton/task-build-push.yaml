@@ -1,0 +1,33 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-push-icr
+spec:
+  params:
+    - name: image
+      type: string
+      description: Fully qualified ICR image name, e.g. us.icr.io/ns/tax-calculator
+    - name: tag
+      type: string
+      default: latest
+  workspaces:
+    - name: source
+  steps:
+    - name: build-and-push
+      image: gcr.io/kaniko-project/executor:v1.22.0
+      workingDir: $(workspaces.source.path)/source
+      args:
+        - --dockerfile=Dockerfile
+        - --context=.
+        - --destination=$(params.image):$(params.tag)
+        - --skip-tls-verify=false
+      volumeMounts:
+        - name: docker-config
+          mountPath: /kaniko/.docker
+  volumes:
+    - name: docker-config
+      secret:
+        secretName: icr-credentials
+        items:
+          - key: .dockerconfigjson
+            path: config.json

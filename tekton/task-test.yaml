@@ -1,0 +1,16 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: jasmine-test
+spec:
+  workspaces:
+    - name: source
+  steps:
+    - name: unit-tests
+      image: node:20-alpine
+      workingDir: $(workspaces.source.path)/source
+      script: |
+        #!/bin/sh
+        set -e
+        npm install
+        npm test
